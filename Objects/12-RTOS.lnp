@@ -71,6 +71,7 @@
 ".\objects\debug.o"
 ".\objects\blackbox.o"
 ".\objects\blackbox_io.o"
+".\objects\scheduler.o"
 --strict --scatter ".\Objects\12-RTOS.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -91,7 +91,12 @@ static void subTaskMotorUpdate(void)
 	
 	if (motorControlEnable) {
 //		printf("motorControlEnable: %s, %d\r\n", __FUNCTION__, __LINE__);
-		writeMotors();
+        
+        /* JUST FOR TESTING: Check if ARMING flag is set */
+        if (CHECK_ARMING_FLAG(ARMED))
+        {
+            writeMotors();
+        }
 	}
 }
 

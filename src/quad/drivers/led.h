@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include "io.h"
+#include "time.h"
 
 #define LED_NUMBER			4
 
@@ -59,5 +60,10 @@ typedef struct {
 void LedInit(LedStatusConfig_t *ledStatusConfig);
 void LedToggle(int ledNum);
 void LedSet(int ledNum, bool ledState);
+    
+void taskLed3(timeUs_t currentTimeUs);           // task for RTOS    
+void taskLed4(timeUs_t currentTimeUs);           // task for RTOS    
+void taskLed5(timeUs_t currentTimeUs);           // task for RTOS    
+void taskLed6(timeUs_t currentTimeUs);           // task for RTOS    
 
 #endif	// __LED_H

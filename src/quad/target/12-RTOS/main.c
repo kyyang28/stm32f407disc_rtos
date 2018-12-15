@@ -42,7 +42,8 @@
 
 #include "time.h"				// allow to use timeUs_t which is uint32_t
 #include "fc_core.h"
-#include "fc_tasks.h"
+#include "fc_tasks.h"           // fcTasksInit()
+#include "scheduler.h"          // cfTask_t
 
 #include "mixer.h"
 
@@ -144,6 +145,11 @@ PUTCHAR_PROTOTYPE
 //extern uint8_t TIM_CAPTURE_STATUS;			// status of timer input capture
 
 extern uint8_t motorControlEnable;
+
+void main_process(void)
+{
+    scheduler();
+}
 
 int main(void)
 {
@@ -495,8 +501,25 @@ int main(void)
 	
 //	printf("sizeof(master_t): %u\r\n", sizeof(master_t));			// sizeof(master_t): 868 so far
 
+    extern cfTask_t *taskQueueArray[TASK_COUNT + 1];
+
+    /* Initialise all the RTOS tasks */
+    fcTasksInit();
+    
+//    printf("taskQueueArray[0]->taskName = %s\r\n", taskQueueArray[0]->taskName);                        // taskName = "SYSTEM"
+//    printf("taskQueueArray[0]->desiredPeriod = %u\r\n", taskQueueArray[0]->desiredPeriod);              // desiredPeriod = 100000
+//    printf("taskQueueArray[0]->staticPriority = %u\r\n\r\n", taskQueueArray[0]->staticPriority);        // staticPriority = 4
+
+//    printf("taskQueueArray[1]->taskName = %s\r\n", taskQueueArray[1]->taskName);                        // taskName = "LED"
+//    printf("taskQueueArray[1]->desiredPeriod = %u\r\n", taskQueueArray[1]->desiredPeriod);              // desiredPeriod = 500000
+//    printf("taskQueueArray[1]->staticPriority = %u\r\n", taskQueueArray[1]->staticPriority);            // staticPriority = 4
+
+//    printf("taskName\t taskPeriod\r\n");
+
 	/* Main loop */
 	while (1) {
+        
+        main_process();
 
 //		delay(10);
 
@@ -522,7 +545,7 @@ int main(void)
 ////			pwmWriteLed(i, ledpwmval);
 ////		}
 				
-#if 1
+#if 0
 		const timeUs_t currentTimeUs = micros();
 //		printf("currentTimeUs before processRx: %u, %s, %d\r\n", currentTimeUs, __FUNCTION__, __LINE__);
 		
@@ -537,7 +560,8 @@ int main(void)
 		
 		taskMainPidLoop(currentTimeUs);
 		
-		delay(20);				// taskUpdateRxMain() update period = 20 ms (20000 us = 50 Hz)
+//		delay(200);				// taskUpdateRxMain() update period = 200 ms (testing rx ONLY)
+		delay(20);				// taskUpdateRxMain() update period = 20 ms (20000 us = 50 Hz), for MOTORS testing
 #endif
 		
 #ifdef BEEPER

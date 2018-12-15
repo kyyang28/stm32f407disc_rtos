@@ -63,7 +63,7 @@ bool blackboxDeviceOpen(void)
 			blackboxMaxHeaderBytesPerIteration = BLACKBOX_TARGET_HEADER_BUDGET_PER_ITERATION;
 			
 			return true;
-			break;
+//			break;
 #endif
 		default:
 			return false;
@@ -449,6 +449,8 @@ int blackboxPrint(const char *s)
 			break;
 #endif
 	}
+    
+    return 0;
 }
 
 /**
@@ -458,5 +460,5 @@ int blackboxPrint(const char *s)
  */
 bool blackboxStopLogging(void)
 {
-	afatfs_fclose(blackboxSDCard.logFile, NULL);
+	return afatfs_fclose(blackboxSDCard.logFile, NULL);
 }

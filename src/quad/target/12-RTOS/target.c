@@ -131,9 +131,9 @@ const timerHardware_t timerHardware[USABLE_TIMER_CHANNEL_COUNT] = {
 	 *            the ESC may not receive the same timing values.
 	 */
 
-	{	// TIM2 PWM 2 for RC2 (Pitch) or PWM generator 1 for MOTOR 1
+	{	/* TIM2 PWM 2 for RC2 (Pitch) or PWM generator 1 for MOTOR 1 */
 		.tim = TIM2,
-		.tag = IO_TAG(PA1),
+		.tag = IO_TAG(PA1), 
 		.channel = TIM_Channel_2,
 		.usageFlags = TIM_USE_MOTOR,
 		.output = TIMER_OUTPUT_STANDARD,
@@ -144,7 +144,7 @@ const timerHardware_t timerHardware[USABLE_TIMER_CHANNEL_COUNT] = {
 		.dmaIrqHandler = 0
 #endif
 	},
-	{	// TIM2 PWM 3 for RC3 (Throttle) or PWM generator 2 for MOTOR 2
+	{	/* TIM2 PWM 3 for RC3 (Throttle) or PWM generator 2 for MOTOR 2 */
 		.tim = TIM2,
 		.tag = IO_TAG(PA2),
 		.channel = TIM_Channel_3,
@@ -157,7 +157,7 @@ const timerHardware_t timerHardware[USABLE_TIMER_CHANNEL_COUNT] = {
 		.dmaIrqHandler = 0
 #endif
 	},
-	{	// TIM2 PWM 4 for RC4 (Yaw) or PWM generator 3 for MOTOR 3
+	{	/* TIM2 PWM 4 for RC4 (Yaw) or PWM generator 3 for MOTOR 3 */
 		.tim = TIM2,
 		.tag = IO_TAG(PA3),
 		.channel = TIM_Channel_4,
@@ -170,6 +170,21 @@ const timerHardware_t timerHardware[USABLE_TIMER_CHANNEL_COUNT] = {
 		.dmaIrqHandler = 0
 #endif
 	},
+#if 1
+	{	/* TIM1 PWM 4 PWM generator 4 for MOTOR 4 */
+		.tim = TIM1,
+		.tag = IO_TAG(PA8),
+		.channel = TIM_Channel_1,
+		.usageFlags = TIM_USE_MOTOR,
+		.output = TIMER_OUTPUT_STANDARD,
+		.alternateFunction = GPIO_AF_TIM1,
+#ifdef USE_DSHOT
+		.dmaStream = DMA2_Stream6,					// DEF_TIM_DMA_STR_0__TIM1_CH1_STREAM = DMA2_ST6_STREAM = DMA2_Stream6
+		.dmaChannel = DMA_Channel_0,
+		.dmaIrqHandler = DMA2_ST6_HANDLER			// DMA2_ST6_HANDLER = 14
+#endif
+	},
+#endif    
 //	{	// TIM10 PWM for MOTOR PWM GENERATOR
 //		.tim = TIM10,
 //		.tag = IO_TAG(PB8),
@@ -216,22 +231,6 @@ const timerHardware_t timerHardware[USABLE_TIMER_CHANNEL_COUNT] = {
 		.dmaIrqHandler = 0
 #endif
 	},
-	
-#if 1
-	{	// S1_OUT - TIM3_UP - BURST
-		.tim = TIM1,
-		.tag = IO_TAG(PA8),
-		.channel = TIM_Channel_1,
-		.usageFlags = TIM_USE_MOTOR,
-		.output = TIMER_OUTPUT_STANDARD,
-		.alternateFunction = GPIO_AF_TIM1,
-#ifdef USE_DSHOT
-		.dmaStream = DMA2_Stream6,					// DEF_TIM_DMA_STR_0__TIM1_CH1_STREAM = DMA2_ST6_STREAM = DMA2_Stream6
-		.dmaChannel = DMA_Channel_0,
-		.dmaIrqHandler = DMA2_ST6_HANDLER			// DMA2_ST6_HANDLER = 14
-#endif
-	},
-#endif
 #if 0
 	{	// S1_OUT - TIM3_UP - BURST
 		.tim = TIM1,

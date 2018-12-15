@@ -104,7 +104,7 @@
 #define SPI1_MISO_PIN			PA6			// ADO/SDO on MPU9250
 #define SPI1_MOSI_PIN			PA7			// SDA/SDI on MPU9250
 
-/* SHOULD be fine */
+/* SPI2 is utilised for SDCard */
 #define SPI2_NSS_PIN			PE5
 #define SPI2_SCK_PIN			PB13		// 45
 #define SPI2_MISO_PIN			PB14		// 46

@@ -13,8 +13,9 @@
 
 #define MAX_INVALID_PULS_TIME			300
 
-#define DELAY_10_HZ						(1000000 / 10)				// in usec
-#define DELAY_50_HZ						(1000000 / 50)				// in usec
+#define DELAY_10_HZ						(1000000 / 10)				// in usec  100 ms
+#define DELAY_50_HZ						(1000000 / 50)				// in usec  20 ms
+#define DELAY_1_HZ						(1000000 / 1)				// in usec, JUST FOR TESTING
 
 #define REQUIRED_CHANNEL_MASK			0x0F						// first 4 channels
 
@@ -102,7 +103,7 @@ void rxInit(const rxConfig_t *rxConfig, const modeActivationCondition_t *modeAct
 	rxRuntimeConfig.rcReadRawFn = nullReadRawRC;
 	rxRuntimeConfig.rcFrameStatusFn = nullFrameStatus;
 	rcSampleIndex = 0;
-	needRxSignalMaxDelayUs = DELAY_10_HZ;
+	needRxSignalMaxDelayUs = DELAY_10_HZ;               // 100 ms
 	
 	for (int i = 0; i < MAX_SUPPORTED_RC_CHANNEL_COUNT; i++) {
 		rcData[i] = rxConfig->midrc;			// midrc = 1500
@@ -164,9 +165,11 @@ bool rxUpdateCheck(timeUs_t currentTimeUs, timeDelta_t currentDeltaTime)
 	UNUSED(currentDeltaTime);
 	
 	if (rxSignalReceived) {
+//        printf("%u, %u: %d\r\n", currentTimeUs, needRxSignalBefore);
 		if (currentTimeUs >= needRxSignalBefore) {
 			rxSignalReceived = false;
 			rxSignalReceivedNotDataDriven = false;
+//            printf("%d\r\n", __LINE__);
 		}
 	}
 	
@@ -182,14 +185,22 @@ bool rxUpdateCheck(timeUs_t currentTimeUs, timeDelta_t currentDeltaTime)
 	{
 		rxDataReceived = false;
 		const uint8_t frameStatus = rxRuntimeConfig.rcFrameStatusFn();
+//        printf("frameStatus: %u\r\n", frameStatus);
 		if (frameStatus & RX_FRAME_COMPLETE) {
 			rxDataReceived = true;
 			rxIsInFailsafeMode = (frameStatus & RX_FRAME_FAILSAFE) != 0;
+//            printf("rxIsInFailsafeMode: %d\r\n", rxIsInFailsafeMode);
 			rxSignalReceived = !rxIsInFailsafeMode;
+//            printf("rxSignalReceived: %d\r\n", rxSignalReceived);
 			needRxSignalBefore = currentTimeUs + needRxSignalMaxDelayUs;
 		}
 	}
 	
+//    printf("%d-\r\n", rxDataReceived);
+//    printf("%d--\r\n", currentTimeUs >= rxUpdateAt);
+//    printf("%d\r\n", currentTimeUs);
+//    printf("%d\r\n", rxUpdateAt);
+    
 	return rxDataReceived || (currentTimeUs >= rxUpdateAt);		// data driven or 50 Hz
 }
 
@@ -464,6 +475,7 @@ static void detectAndApplySignalLossBehaviour(timeUs_t currentTimeUs)
 void calculateRxChannelsAndUpdateFailsafe(timeUs_t currentTimeUs)
 {
 	rxUpdateAt = currentTimeUs + DELAY_50_HZ;		// delay 20 ms
+//	rxUpdateAt = currentTimeUs + DELAY_1_HZ;		// delay 1 second, JUST FOR TESTING
 	
 	/* only proceed when no more samples to skip and suspend period is over */
 	if (skipRxSamples) {
